@@ -1,6 +1,5 @@
-
 import java.io.*;
-import java.util.*;
+//import java.util.*;
 class TestClass {
     public static void main(String args[] ) throws Exception {
         // Write your code here
