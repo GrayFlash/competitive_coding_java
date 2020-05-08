@@ -23,9 +23,10 @@ class tripleSort{
                 int y = ar[x-1];
                 int z = ar[y-1];
                 if(x==z){
-                    for(int j=i; j<N; j++){
+                    for(int j=i+1; j<N; j++){
                         if(ar[j]==(j+1)) continue;
                         if(ar[j]==z) continue;
+                        if(ar[j]==y) continue;
                         z = ar[j];
                         ar[y-1] = y;
                         ar[i] = z;
@@ -37,6 +38,7 @@ class tripleSort{
                     }
                 }
                 else if(x==ar[z]){ // doubt for this check by increasing 2
+                   
                     ar[y-1] = y;
                     ar[x-1] = x;
                     ar[z-1] = z;
@@ -51,7 +53,7 @@ class tripleSort{
                     ar[x-1] = x;
                     str[pos] = x+" "+y+" "+z;
                     pos++;
-                    System.out.println("Here");
+                    //System.out.println("Here");
                     i--;
                 }
                 if(pos>K) {
@@ -59,13 +61,16 @@ class tripleSort{
                     break;
                 }
             }
-            if(flag==0) System.out.println("-1");
-            
-                System.out.println(pos);
+            for(int i=0; i<N;i++){
+                System.out.print(ar[i]+" ");
+            }
+            if(flag==0) System.out.println("\n-1");
+            else{
+                System.out.println("\n"+pos);
                 for(int i=0; i<pos;i++){
                     System.out.println(str[i]);
                 }
-            
+            }
         }
     }
 }
