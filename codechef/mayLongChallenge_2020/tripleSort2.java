@@ -1,14 +1,8 @@
-// Working program using Reader Class 
-import java.io.DataInputStream; 
-import java.io.FileInputStream; 
-import java.io.IOException; 
-import java.io.InputStreamReader; 
-import java.util.Scanner; 
-import java.util.StringTokenizer; 
-  
-public class Main 
-{ 
-    static class Reader 
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Reader 
     { 
         final private int BUFFER_SIZE = 1 << 16; 
         private DataInputStream din; 
@@ -127,118 +121,91 @@ public class Main
                 return; 
             din.close(); 
         } 
-    } 
-  
-    public static void main(String[] args) throws IOException 
-    { 
-        Reader sc=new Reader(); 
-        int T = sc.nextInt(); 
-        while(T-->0){
-            int N = sc.nextInt();
-            int K = sc.nextInt();
-            int ar[] = new int[N+7];
-            for(int i=0; i<N; i++){
-                ar[i] = sc.nextInt();
-            }
-            String str[] = new String[K+7];
-            int pos = 0;
-            int flag = 1;
-            for(int i=0; i<N; i++){
-                int x = ar[i];
-                if(x==(i+1)) continue;
-                int y = ar[x-1];
-                if(x==ar[y-1]){
-                    int grat = 0;
-                    for(int j=i+1; j<N;j++) {
-                        if(j==(y+1)){
-                            grat = 1;
-                            continue;
-                        }
-                        if((j+1)==(ar[j])) continue;
-                        int z = ar[j];
-                        if(grat==1){
-                            ar[x-1] = x;
-                            ar[j]= y;
-                            ar[i] = z;
-                            i--;
-                            str[pos]= x+" "+y+" "+z;
-                            pos++;
-                            break;
-                        }
-                        else{
-                            ar[i] = z;
-                            ar[x-1] = x;
-                            ar[j] = y;
-                            str[pos] = x + " "+ z + " " + y;
-                            i--;
-                            pos++;
-                            str[pos] = x + " "+ z + " " + y;
-                            pos++;
-                            break;
-                        }
-                    }
-                }
-                else{
-                    int z = ar[y-1];
-                    if(ar[z-1]==x){
-                        if(z>y){
-                            ar[x-1] = x;
-                            ar[y-1] = y;
-                            ar[z-1] = z;
-                            str[pos] = x+" "+y+" "+z;
-                            pos++;
-                            i--;
-                        }
-                        else{
-                            ar[x-1] = x;
-                            ar[y-1] = y;
-                            ar[z-1] = z;
-                            str[pos] = x+" "+y+" "+z;
-                            pos++;
-                            str[pos] = x+" "+y+" "+z;
-                            pos++;
-                            i--;
-                        }
-                    }
-                    else{
-                        if(y>z){
-                            ar[x-1] = x;
-                            ar[i] = z;
-                            ar[y-1] = y;
-                            str[pos] = x+" "+y+" "+z;
-                            pos++;
-                            str[pos] = x+" "+y+" "+z;
-                            pos++;
-                            i--;   
-                        }
-                        else{
-                            ar[i] = z;
-                            ar[y-1] = y;
-                            ar[x-1] = x;
-                            str[pos] = x+" "+y+" "+z;
-                            pos++;
-                            i--;   
-                        }
-                    }
-                    if(pos>K){
-                        flag = 0; 
-                        break;
-                    }
-                }
-                if(pos>K){
-                    flag = 0; 
-                    break;
-                }
-            }
-            if(flag==0) System.out.println("-1");
-            else{
-                System.out.println(pos);
-                for(int i=0; i<pos; i++){
-                    System.out.println(str[i]);
-                }
-            }
-        }
-    } 
+    }
 
-    
-} 
+class Solution
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+	     Reader sc=new Reader();
+         BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
+         int t=sc.nextInt();
+         while(t-->0){
+             int n=sc.nextInt();
+             int k=sc.nextInt();
+             int a[]=new int[n+1];
+             boolean same[]=new boolean[n+1];
+             int idx[]=new int[n+1];
+             int i;
+             for(i=1;i<=n;i++){
+                 a[i]=sc.nextInt();
+                 idx[a[i]]=i;
+                 if(a[i]==i){
+                     same[i]=true;
+                 }
+             }
+             int count=0;
+             boolean flag=false;
+            
+             ArrayList<Integer> twos=new ArrayList();
+             StringBuilder sb=new StringBuilder();
+             for(i=1;i<=n;i++){
+                 
+                 if(same[i]) continue;
+                 int idx1=i;
+                 int idx2=a[idx1];
+                 int idx3=idx[idx1];
+                 if(idx2==idx3){
+                     twos.add(idx1);
+                     twos.add(idx2);
+                     same[idx1]=same[idx2]=true;
+                     continue;
+                 }
+                 
+                 a[idx3]=a[idx2];a[idx1]=idx1;a[idx2]=idx2;
+                 idx[idx1]=idx1;idx[idx2]=idx2;idx[a[idx3]]=idx3;
+                 if(a[idx3]==idx3){
+                     same[idx3]=true;
+                 }
+                 same[idx1]=same[idx2]=true;
+                 sb.append(idx1+" "+idx2+" "+idx3+"\n");
+                
+                 count++;
+                 if(count>k){
+                     bw.write("-1\n");
+                     flag=true;
+                     break;
+                 }
+             }
+             if(!flag){
+                 if(twos.size()%4!=0){
+                     bw.write("-1\n");
+                     flag=true;
+                 }
+                 else{
+                     for(i=0;i<twos.size();i=i+4){
+                         int idx1=twos.get(i);
+                         int idx2=twos.get(i+1);
+                         int idx3=twos.get(i+2);
+                         int idx4=twos.get(i+3);
+                         
+                         sb.append(idx1+" "+idx3+" "+idx2+"\n");
+                         sb.append(idx2+" "+idx4+" "+idx3+"\n");
+                         
+                         count+=2;
+                         if(count>k){
+                             bw.write("-1\n");
+                             flag=true;
+                             break;
+                         }
+                     }
+                 }
+             }
+             if(!flag){
+                 bw.write(count+"\n");
+                 bw.write(sb+"");
+             }
+         }
+         bw.flush();
+	}
+}
